@@ -1,2 +1,2 @@
-# simple-calc-iOS
-INFO449 - Assignment 6
+# simple-calc-iOS2
+INFO449 - Assignment 7

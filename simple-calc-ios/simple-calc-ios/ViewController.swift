@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     private var prevInput = ""
     private var numbers = [Double]()
     private var operations = [String]()
+    private var calcHistory = [String]()
     private var opInvalid: Bool = false
     private var resetState: Bool = false
     
@@ -26,6 +27,13 @@ class ViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier! == "HistorySegue") {
+            let dest = segue.destination as! HistoryViewController
+            dest.calcHistory = self.calcHistory
+        }
     }
     
     @IBAction func cancelPressed(_ sender: UIButton) {
@@ -80,6 +88,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func enterPressed(_ sender: UIButton) {
+        calcHistory.append(textField.text!)
         let inputs = textField.text!.components(separatedBy: " ")
         var oddCounter = 0
         for each in inputs {
@@ -108,6 +117,7 @@ class ViewController: UIViewController {
         }
         if (opInvalid) {
             textField.text = "Invalid Input"
+            let _ = calcHistory.popLast()
             reset()
         } else {
             calculate()
@@ -177,11 +187,15 @@ class ViewController: UIViewController {
                 result += 0
             }
         }
+        var calcRequest = calcHistory.popLast()!
         if (result - Double(Int(result)) == 0) {
             textField.text = "\(Int(result))"
+            calcRequest = calcRequest + " = \(Int(result))"
         } else {
             textField.text = "\(result)"
+            calcRequest = calcRequest + " = \(result)"
         }
+        calcHistory.append(calcRequest)
     }
 
     private func calcFactorial(_ input: Double) -> Double {
